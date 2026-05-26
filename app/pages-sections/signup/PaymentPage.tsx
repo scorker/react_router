@@ -6,8 +6,7 @@ import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 // API
 import Api from "../../../api/index";
-// @material-ui/core components
-//import makeStyles from "@mui/styles/makeStyles";
+
 import {
   IconButton,
   Button,
@@ -19,42 +18,11 @@ import { Close, Backup, Bolt } from "@mui/icons-material";
 // Stripe
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import type { StripeCardElementChangeEvent } from "@stripe/stripe-js";
-import {
-  paymentCartItemRow,
-  paymentAddonIconWrapper,
-  paymentDiscountedPriceText,
-  paymentSummaryTotalText,
-  sharedFlexRow,
-  paymentSummaryAmountFallback,
-  paymentPromoLottieWrapper,
-  paymentCardErrorText,
-  errorContainer,
-  appliedPromoSubtitle,
-  cartItemHeader,
-  formSectionContainer,
-  cartItemTitle,
-  cartItemPrice,
-  cartItemImage,
-  cartItemContainer,
-  cartItemDescription,
-  planSummaryContainer,
-  cardElementContainer,
-  cardElementTitle,
-  cardElementLogo,
-  planSummaryItem,
-  planSummaryLabel,
-  planSummaryTotal,
-  cartContainer,
-  formInput,
-} from "./signupStyles";
 // Lottie animation data
 // @ts-ignore - no type declarations for JSON
 import appliedCheckData from "../../../lotties/applied-check.json";
 
-//import { primaryColor } from "../../../styles/jss/nextjs-material-kit-pro.js";
-//import signupPageStyle from "../../../styles/jss/nextjs-material-kit-pro/pages/signupPageStyle.js";
-
-//const useStyles = makeStyles(signupPageStyle as any);
+import { primaryColor } from "../../../styles/jss/nextjs-material-kit-pro.js";
 
 interface PlanDataItem {
   business_account_type_id: number;
@@ -96,6 +64,7 @@ interface PromoData {
 }
 
 interface PaymentPageProps {
+  classes: Record<string, string>;
   isVisible: boolean;
   formState: PaymentFormState;
   handleChange: (key: string, value: unknown) => void;
@@ -104,7 +73,7 @@ interface PaymentPageProps {
 }
 
 export default function PaymentPage(props: PaymentPageProps) {
-  // const classes = useStyles();
+  const classes = props.classes;
 
   const [promoLoading, setPromoLoading] = useState(false);
   const [promoCode, setPromoCode] = useState<string | null>(null);
@@ -154,14 +123,14 @@ export default function PaymentPage(props: PaymentPageProps) {
   const CARD_ELEMENT_OPTIONS = {
     style: {
       base: {
-        //     color: primaryColor[0],
+        color: primaryColor[0],
         fontWeight: "500",
         fontFamily: '"Public Sans", Helvetica, sans-serif',
         fontSmoothing: "antialiased",
-        //       fontSize: "17px",
-        //       "::placeholder": {
-        //  //       color: primaryColor[2],
-        //       },
+        fontSize: "17px",
+        "::placeholder": {
+          color: primaryColor[2],
+        },
       },
       invalid: {
         color: "#d32f2f",
@@ -211,14 +180,11 @@ export default function PaymentPage(props: PaymentPageProps) {
     }
     return (
       <div
-        style={cartItemContainer}
-        //className={classes.cartItemContainer}
+        className={classes.cartItemContainer}
         key={`subscription${props.formState.businessAccountTypeId}`}
       >
-        <div style={paymentCartItemRow}>
-          <div
-            style={cartItemImage} //className={classes.cartItemImage}
-          >
+        <div className={classes.paymentCartItemRow}>
+          <div className={classes.cartItemImage}>
             <img
               src={planImg}
               alt="Plan image"
@@ -229,29 +195,18 @@ export default function PaymentPage(props: PaymentPageProps) {
           </div>
           <div>
             <div
-              style={cartItemHeader}
-              //className={classes.cartItemHeader}
-              //style={{ color: primaryColor[0] }}
+              className={classes.cartItemHeader}
+              style={{ color: primaryColor[0] }}
             >
               YOUR PLAN
             </div>
-            <div
-              style={cartItemTitle} //className={classes.cartItemTitle}
-            >
-              {planName} Plan
-            </div>
-            <div
-              style={cartItemDescription} //className={classes.cartItemDescription}
-            >
-              {planDescription}
-            </div>
-            <div
-              style={cartItemPrice} //className={classes.cartItemPrice}
-            >
+            <div className={classes.cartItemTitle}>{planName} Plan</div>
+            <div className={classes.cartItemDescription}>{planDescription}</div>
+            <div className={classes.cartItemPrice}>
               <span
-                style={
+                className={
                   planPrice !== discountedPrice
-                    ? paymentDiscountedPriceText
+                    ? classes.paymentDiscountedPriceText
                     : undefined
                 }
               >
@@ -337,36 +292,21 @@ export default function PaymentPage(props: PaymentPageProps) {
     }
     return (
       <div
-        style={cartItemContainer}
-        //className={classes.cartItemContainer}
+        className={classes.cartItemContainer}
         key={`addon${businessAccountAddonId}`}
       >
-        <div style={paymentCartItemRow}>
-          <div
-            style={cartItemImage}
-            //className={classes.cartItemImage}
-            style={paymentAddonIconWrapper}
-          >
-            {addonIcon}
-          </div>
+        <div className={classes.paymentCartItemRow}>
+          <div className={classes.cartItemImage}>{addonIcon}</div>
           <div>
-            <div
-              style={cartItemHeader} //className={classes.cartItemHeader}
-            >
-              ADD-ON
-            </div>
-            <div
-              style={cartItemTitle} //className={classes.cartItemTitle}
-            >
+            <div className={classes.cartItemHeader}>ADD-ON</div>
+            <div className={classes.cartItemTitle}>
               {addonObj.business_account_addon}
             </div>
-            <div
-              style={cartItemPrice} //className={classes.cartItemPrice}
-            >
+            <div className={classes.cartItemPrice}>
               <span
-                style={
+                className={
                   addonPrice !== discountedPrice
-                    ? paymentDiscountedPriceText
+                    ? classes.paymentDiscountedPriceText
                     : undefined
                 }
               >
@@ -459,18 +399,10 @@ export default function PaymentPage(props: PaymentPageProps) {
       totalAmount += addonAmount;
     }
     return (
-      <div
-        style={planSummaryContainer} //className={classes.planSummaryContainer}
-      >
+      <div className={classes.planSummaryContainer}>
         {planAmount ? (
-          <div
-            style={planSummaryItem} //className={classes.planSummaryItem}
-          >
-            <span
-              style={planSummaryLabel} //className={classes.planSummaryLabel}
-            >
-              Subscription
-            </span>
+          <div className={classes.planSummaryItem}>
+            <span className={classes.planSummaryLabel}>Subscription</span>
             <span>
               £
               {Number.isInteger(planAmount)
@@ -481,14 +413,8 @@ export default function PaymentPage(props: PaymentPageProps) {
           </div>
         ) : null}
         {addonAmount ? (
-          <div
-            style={planSummaryItem} //className={classes.planSummaryItem}
-          >
-            <span
-              style={planSummaryLabel} //className={classes.planSummaryLabel}
-            >
-              Add-ons
-            </span>
+          <div className={classes.planSummaryItem}>
+            <span className={classes.planSummaryLabel}>Add-ons</span>
             <span>
               £
               {Number.isInteger(addonAmount)
@@ -498,22 +424,13 @@ export default function PaymentPage(props: PaymentPageProps) {
           </div>
         ) : null}
         <div
-          //className={classNames(
-          //  classes.planSummaryItem,
-          //  classes.planSummaryTotal,
-          //)}
-          style={{
-            ...planSummaryItem,
-            ...planSummaryTotal,
-            ...paymentSummaryTotalText,
-          }}
+          className={classNames(
+            classes.planSummaryItem,
+            classes.planSummaryTotal,
+          )}
         >
-          <span
-            style={planSummaryLabel} //className={classes.planSummaryLabel}
-          >
-            Total
-          </span>
-          <div style={sharedFlexRow}>
+          <span className={classes.planSummaryLabel}>Total</span>
+          <div className={classes.sharedFlexRow}>
             <span>£</span>
             {/* {AnimatedNumbersComponent ? (
                 <AnimatedNumbersComponent
@@ -521,7 +438,7 @@ export default function PaymentPage(props: PaymentPageProps) {
                   animateToNumber={Math.round(totalAmount * 100) / 100}
                 />
               ) : ( */}
-            <span style={paymentSummaryAmountFallback}>
+            <span className={classes.paymentSummaryAmountFallback}>
               {Number.isInteger(totalAmount)
                 ? Number(totalAmount)
                 : Number(totalAmount).toFixed(2)}
@@ -546,7 +463,7 @@ export default function PaymentPage(props: PaymentPageProps) {
       },
     };
     return (
-      <div style={paymentPromoLottieWrapper}>
+      <div className={classes.paymentPromoLottieWrapper}>
         {/* <LottieComponent options={defaultOptions} width={50} /> */}
       </div>
     );
@@ -555,9 +472,8 @@ export default function PaymentPage(props: PaymentPageProps) {
   const renderPromoInput = () => {
     if (promoData?.valid) {
       return (
-        <div //className={classes.appliedPromoContainer}
-        >
-          <div style={sharedFlexRow}>
+        <div className={classes.appliedPromoContainer}>
+          <div className={classes.sharedFlexRow}>
             {renderPromoLottie()}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
@@ -565,15 +481,11 @@ export default function PaymentPage(props: PaymentPageProps) {
               transition={{ duration: 0.3, delay: 0.3 }}
             >
               <div
-                style={appliedPromoTitle} //className={classes.appliedPromoTitle}
+              //className={classes.appliedPromoTitle}
               >
                 {promoCode}
               </div>
-              <div
-                style={appliedPromoSubtitle} //className={classes.appliedPromoSubtitle}
-              >
-                Promo applied
-              </div>
+              <div className={classes.appliedPromoSubtitle}>Promo applied</div>
             </motion.div>
           </div>
           <motion.div
@@ -600,7 +512,7 @@ export default function PaymentPage(props: PaymentPageProps) {
         error={promoData?.valid === false}
         helperText={promoData?.valid === false ? promoData?.message : undefined}
         variant="outlined"
-        style={formInput} //className={classes.formInput}
+        className={classes.formInput}
         onChange={(e) => setPromoCode(e.target.value)}
         fullWidth
         InputProps={{
@@ -703,12 +615,8 @@ export default function PaymentPage(props: PaymentPageProps) {
   return (
     <AnimatePresence>
       {props.isVisible && (
-        <div
-          style={formSectionContainer} //className={classes.formSectionContainer}
-        >
-          <div
-            style={cartContainer} //className={classes.cartContainer}
-          >
+        <div className={classes.formSectionContainer}>
+          <div className={classes.cartContainer}>
             {renderSubscription()}
             {props.formState.businessAccountAddonIds.map((x) => {
               return renderAddon(x);
@@ -716,35 +624,25 @@ export default function PaymentPage(props: PaymentPageProps) {
           </div>
           {renderPromoInput()}
           {renderSummaryCard()}
-          <div
-            style={cardElementContainer} //className={classes.cardElementContainer}
-          >
-            <div
-              style={cardElementTitle} //className={classes.cardElementTitle}
-            >
+          <div className={classes.cardElementContainer}>
+            <div className={classes.cardElementTitle}>
               <span>Credit or debit card</span>
-              <div style={sharedFlexRow}>
-                <div
-                  style={cardElementLogo} //className={classes.cardElementLogo}
-                >
+              <div className={classes.sharedFlexRow}>
+                <div className={classes.cardElementLogo}>
                   <img
                     src="/img/payment-icons/visa.svg"
                     alt="Visa logo"
                     style={{ width: "100%", height: "100%" }}
                   />
                 </div>
-                <div
-                  style={cardElementLogo} //className={classes.cardElementLogo}
-                >
+                <div className={classes.cardElementLogo}>
                   <img
                     src="/img/payment-icons/mastercard.svg"
                     alt="Mastercard logo"
                     style={{ width: "100%", height: "100%" }}
                   />
                 </div>
-                <div
-                  style={cardElementLogo} //className={classes.cardElementLogo}
-                >
+                <div className={classes.cardElementLogo}>
                   <img
                     src="/img/payment-icons/amex.svg"
                     alt="American Express logo"
@@ -758,14 +656,16 @@ export default function PaymentPage(props: PaymentPageProps) {
               onChange={handleCardElementChange}
             />
             {cardElementError && (
-              <div style={paymentCardErrorText}>{cardElementError}</div>
+              <div className={classes.paymentCardErrorText}>
+                {cardElementError}
+              </div>
             )}
           </div>
           <Button
             variant="contained"
             size="large"
             color="secondary"
-            //className={classes.formButton}
+            className={classes.formButton}
             onClick={() => createAccount()}
           >
             {props.formState?.createAccountLoading ? (
@@ -775,11 +675,7 @@ export default function PaymentPage(props: PaymentPageProps) {
             )}
           </Button>
           {createAccountError && (
-            <div
-              style={errorContainer} //className={classes.errorContainer}
-            >
-              {createAccountError}
-            </div>
+            <div className={classes.errorContainer}>{createAccountError}</div>
           )}
         </div>
       )}

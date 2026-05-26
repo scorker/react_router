@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { SignUp } from "../signup/signup";
+import SignUp from "../signup/signup";
 import "../../styles/scss/nextjs-material-kit-pro.scss";
 
 import { createTheme, ThemeProvider } from "@mui/material";

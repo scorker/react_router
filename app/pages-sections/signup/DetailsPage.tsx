@@ -4,8 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 // API
 import Api from "../../../api/index";
-// @material-ui/core components
-//import makeStyles from "@mui/styles/makeStyles";
+
 import {
   TextField,
   FormControlLabel,
@@ -16,17 +15,8 @@ import {
   IconButton,
   CircularProgress,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import {
-  detailsFormSectionContainer,
-  detailsNameInputContainer,
-  detailsFormInput,
-  detailsFormButton,
-  detailsTermsLabel,
-  detailsTermsLink,
-} from "./signupStyles";
 
-//import signupPageStyle from "../../../styles/jss/nextjs-material-kit-pro/pages/signupPageStyle.js";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 type RequiredFieldKey =
   | "firstname"
@@ -47,6 +37,7 @@ type DetailsFormState = {
 };
 
 type DetailsPageProps = {
+  classes: Record<string, string>;
   formState: DetailsFormState;
   isVisible: boolean;
   inTransition?: boolean;
@@ -61,7 +52,6 @@ type RequiredKeyMeta = {
 
 type RequiredKeyMap = Record<RequiredFieldKey, RequiredKeyMeta>;
 
-//const useStyles = makeStyles(signupPageStyle as any);
 const MotionDiv = motion.div as any;
 
 const animationVariants = {
@@ -78,7 +68,7 @@ const animationVariants = {
 };
 
 export default function DetailsPage(props: DetailsPageProps) {
-  //const classes = useStyles();
+  const classes = props.classes;
   const [formLoading, setFormLoading] = useState(false);
   const [firstNameError, setFirstNameError] = useState(false);
   const [lastNameError, setLastNameError] = useState(false);
@@ -191,18 +181,18 @@ export default function DetailsPage(props: DetailsPageProps) {
     <AnimatePresence>
       {props.isVisible && (
         <MotionDiv
-          style={detailsFormSectionContainer}
+          className={classes.formSectionContainer}
           variants={animationVariants}
           initial={{ opacity: 0, y: 0 }}
           animate={"visible"}
           exit={"hidden"}
         >
-          <div style={detailsNameInputContainer}>
+          <div className={classes.nameInputContainer}>
             <TextField
               required
               label="First name"
               variant="outlined"
-              style={detailsFormInput}
+              className={classes.formInput}
               onChange={(e) => handleChange("firstname", e.target.value)}
               autoComplete="given-name"
               value={
@@ -216,7 +206,7 @@ export default function DetailsPage(props: DetailsPageProps) {
               required
               label="Last name"
               variant="outlined"
-              style={detailsFormInput}
+              className={classes.formInput}
               onChange={(e) => handleChange("lastname", e.target.value)}
               autoComplete="family-name"
               value={props.formState?.lastname ? props.formState.lastname : ""}
@@ -229,7 +219,7 @@ export default function DetailsPage(props: DetailsPageProps) {
             required
             label="Business name"
             variant="outlined"
-            style={detailsFormInput}
+            className={classes.formInput}
             onChange={(e) => handleChange("businessName", e.target.value)}
             autoComplete="organization"
             value={
@@ -243,7 +233,7 @@ export default function DetailsPage(props: DetailsPageProps) {
             required
             label="Email"
             variant="outlined"
-            style={detailsFormInput}
+            className={classes.formInput}
             type="email"
             onChange={(e) => handleChange("email", e.target.value)}
             autoComplete="email"
@@ -256,7 +246,7 @@ export default function DetailsPage(props: DetailsPageProps) {
             required
             label="Password"
             variant="outlined"
-            style={detailsFormInput}
+            className={classes.formInput}
             type={passwordVisible ? "text" : "password"}
             onChange={(e) => handleChange("password", e.target.value)}
             autoComplete="new-password"
@@ -279,7 +269,7 @@ export default function DetailsPage(props: DetailsPageProps) {
             }}
           />
           <div
-            //className={classes.termsContainer}
+            className={classes.termsContainer}
             style={
               termsError === true
                 ? {
@@ -291,8 +281,7 @@ export default function DetailsPage(props: DetailsPageProps) {
             }
           >
             <FormControlLabel
-              style={detailsTermsLabel}
-              //className={classes.termsLabel}
+              className={classes.termsLabel}
               control={
                 <Checkbox
                   required
@@ -308,8 +297,7 @@ export default function DetailsPage(props: DetailsPageProps) {
                 <span>
                   I agree to the{" "}
                   <Link
-                    style={detailsTermsLink}
-                    //className={classes.termsLink}
+                    className={classes.termsLink}
                     href="https://help.whatstyle.uk/legal/terms_of_business"
                     target="_blank"
                     rel="noopener"
@@ -318,7 +306,7 @@ export default function DetailsPage(props: DetailsPageProps) {
                   </Link>
                   {", "}
                   <Link
-                    style={detailsTermsLink}
+                    className={classes.termsLink}
                     href="https://help.whatstyle.uk/legal/terms_of_use"
                     target="_blank"
                     rel="noopener"
@@ -327,7 +315,7 @@ export default function DetailsPage(props: DetailsPageProps) {
                   </Link>
                   {" and "}
                   <Link
-                    style={detailsTermsLink}
+                    className={classes.termsLink}
                     href="https://help.whatstyle.uk/legal/privacy_policy"
                     target="_blank"
                     rel="noopener"
@@ -343,8 +331,7 @@ export default function DetailsPage(props: DetailsPageProps) {
             variant="contained"
             size="large"
             color="primary"
-            style={detailsFormButton}
-            //className={classes.formButton}
+            className={classes.formButton}
             onClick={() => nextPage()}
           >
             {formLoading ? (

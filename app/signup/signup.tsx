@@ -1,8 +1,9 @@
 import { IconButton, LinearProgress } from "@mui/material";
 import { KeyboardBackspace } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
-//import Intercom from "@intercom/messenger-js-sdk";
+import { Intercom } from "@intercom/messenger-js-sdk";
 import { Elements } from "@stripe/react-stripe-js";
+import { withStyles } from "@mui/styles";
 import { getStripe } from "../../utilities/stripe";
 import Api from "../../api/index";
 import { motion } from "framer-motion";
@@ -13,59 +14,10 @@ import PaymentPage from "../pages-sections/signup/PaymentPage";
 import stylerLogoSecondary from "../assets/styler_logo_secondary.svg";
 import PresentationSlide from "../../components/SignUp/PresentationSlide";
 import SuccessOverlay from "../../components/SignUp/SuccessOverlay";
+import signupPageStyle from "../../styles/jss/nextjs-material-kit-pro/pages/signupPageStyle.js";
 
 const backButtonSx = {
   color: "inherit",
-};
-
-const progressBarTrackStyle: React.CSSProperties = {
-  width: "100%",
-  height: "8px",
-  borderRadius: "20px",
-  backgroundColor: "rgba(0, 0, 0, 0.12)",
-  overflow: "hidden",
-};
-
-const pageShellStyle: React.CSSProperties = {
-  // minHeight: "100dvh",
-  display: "flex",
-};
-
-const pageContentStyle: React.CSSProperties = {
-  flex: 1,
-  display: "flex",
-  justifyContent: "space-evenly",
-  padding: "clamp(12px, 2.5vw, 28px)",
-  overflowY: "auto",
-  width: "100%",
-  alignItems: "center",
-  marginLeft: "auto",
-  marginRight: "auto",
-  paddingLeft: "15px",
-  paddingRight: "15px",
-  flexDirection: "column",
-  gap: "clamp(12px, 3vh, 32px)",
-};
-
-const formContainerStyle: React.CSSProperties = {
-  gap: "14px",
-  width: "100%",
-  display: "flex",
-  alignItems: "center",
-  marginLeft: "auto",
-  marginRight: "auto",
-  paddingLeft: "15px",
-  paddingRight: "15px",
-  flexDirection: "column",
-};
-
-const formTitle: React.CSSProperties = {
-  color: "#0a122b",
-  width: "100%",
-  position: "relative",
-  fontSize: "1.7em",
-  fontWeight: 600,
-  marginBottom: "1em",
 };
 
 const backButton: React.CSSProperties = {
@@ -73,7 +25,7 @@ const backButton: React.CSSProperties = {
   marginTop: "-2px",
 };
 
-export function SignUp() {
+const SignUp = (props: any) => {
   const [stripePromise, setStripePromise] = useState<ReturnType<
     typeof getStripe
   > | null>(null);
@@ -117,7 +69,7 @@ export function SignUp() {
   useEffect(() => {
     setFormPage(0);
     // Init intercom
-    // Intercom({ app_id: "u8n0vv7y" });
+    Intercom({ app_id: "u8n0vv7y" });
   }, []);
 
   const changePageViaProgressBar = (page: number) => {
@@ -318,8 +270,10 @@ export function SignUp() {
           inTransition={subTitleTransition}
           isVisible={formPage === 0 && subTitleTransition}
           formState={formState}
+          classes={props.classes}
         />
         <PlanPage
+          classes={props.classes}
           handleChange={handleChange}
           changePage={changePage}
           inTransition={subTitleTransition}
@@ -327,6 +281,7 @@ export function SignUp() {
           formState={formState}
         />
         <AddonsPage
+          classes={props.classes}
           handleChange={handleChange}
           changePage={changePage}
           inTransition={subTitleTransition}
@@ -335,6 +290,7 @@ export function SignUp() {
         />
         <Elements stripe={stripePromise}>
           {React.createElement(PaymentPage as any, {
+            classes: props.classes,
             handleChange,
             changePage,
             inTransition: subTitleTransition,
@@ -376,63 +332,64 @@ export function SignUp() {
     );
   };
 
-  const renderProgressBar = (value: number, page: number) => {
-    return (
-      <div
-        style={{ flex: 1, minWidth: 0, width: "100%", cursor: "pointer" }}
-        onClick={() => changePageViaProgressBar(page)}
-      >
-        <LinearProgress
-          variant="determinate"
-          value={value}
-          sx={{
-            ...progressBarTrackStyle,
-            "& .MuiLinearProgress-bar": {
-              backgroundColor: "#ff2b54",
-              transition: "transform .1s linear",
-              borderRadius: "20px",
-            },
-          }}
-        />
-      </div>
-    );
-  };
-
   return (
-    <div style={pageShellStyle}>
+    <div className={props.classes.pageContainer}>
       {formComplete && <SuccessOverlay firstname={firstname} />}
-      <div style={pageContentStyle}>
-        <div style={formContainerStyle}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginBottom: 12,
-            }}
-          >
+      <div className={props.classes.formContainer}>
+        <div className={props.classes.formHeader}></div>
+        <div className={props.classes.formBody}>
+          <div className={props.classes.logoContainer}>
             <img
               src={stylerLogoSecondary}
               alt="Styler Logo"
               style={{ width: "min(220px, 56vw)", height: "auto" }}
             />
           </div>
-          <div style={formTitle}>
+          <div className={props.classes.formTitle}>
             {renderBackButton()}
             {renderSubTitle()}
           </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              width: "100%",
-              gap: 8,
-            }}
-          >
-            {renderProgressBar(100, 0)}
-            {renderProgressBar(formPage >= 1 ? 100 : 0, 1)}
-            {renderProgressBar(formPage >= 2 ? 100 : 0, 2)}
-            {renderProgressBar(formPage >= 3 ? 100 : 0, 3)}
+          <div className={props.classes.formProgressBarContainer}>
+            <div
+              style={{ flex: 1, cursor: "pointer" }}
+              onClick={() => changePageViaProgressBar(0)}
+            >
+              <LinearProgress
+                variant="determinate"
+                value={100}
+                className={props.classes.formProgressBar}
+              />
+            </div>
+            <div
+              style={{ flex: 1, cursor: "pointer" }}
+              onClick={() => changePageViaProgressBar(1)}
+            >
+              <LinearProgress
+                variant="determinate"
+                value={formPage >= 1 ? 100 : 0}
+                className={props.classes.formProgressBar}
+              />
+            </div>
+            <div
+              style={{ flex: 1, cursor: "pointer" }}
+              onClick={() => changePageViaProgressBar(2)}
+            >
+              <LinearProgress
+                variant="determinate"
+                value={formPage >= 2 ? 100 : 0}
+                className={props.classes.formProgressBar}
+              />
+            </div>
+            <div
+              style={{ flex: 1, cursor: "pointer" }}
+              onClick={() => changePageViaProgressBar(3)}
+            >
+              <LinearProgress
+                variant="determinate"
+                value={formPage >= 3 ? 100 : 0}
+                className={props.classes.formProgressBar}
+              />
+            </div>
           </div>
           {renderFormPage()}
         </div>
@@ -440,4 +397,6 @@ export function SignUp() {
       <PresentationSlide />
     </div>
   );
-}
+};
+
+export default withStyles(() => signupPageStyle)(SignUp);

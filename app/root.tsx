@@ -8,6 +8,9 @@ import {
 } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
+import { CacheProvider } from "@emotion/react";
+import createEmotionCache from "./createCache";
+import AppTheme from "./theme";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -60,8 +63,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+const cache = createEmotionCache();
+
 export default function App() {
-  return <Outlet />;
+   if (typeof window !== "undefined") {
+     return (
+       <CacheProvider value={cache}>
+         <AppTheme>
+           <Outlet />
+         </AppTheme>
+       </CacheProvider>
+     );
+   }
+   return (
+     <AppTheme>
+       <Outlet />
+     </AppTheme>
+   );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

@@ -22,6 +22,7 @@ const successOverlayStyle = {
   successOverlayDialog: {
     ...container,
     ...primaryBoxShadow,
+    color: primaryColor[0],
     padding: "0!important",
     backgroundColor: whiteColor,
     borderRadius: "1em",

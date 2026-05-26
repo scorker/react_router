@@ -2,22 +2,9 @@
 import React from "react";
 // Framer motion
 import { motion, AnimatePresence } from "framer-motion";
-// @material-ui/core components
-//import makeStyles from "@mui/styles/makeStyles";
 import { Checkbox, Button, CircularProgress } from "@mui/material";
-import {
-  addonsUnavailableText,
-  addonsDeliveryEstimateText,
-  addonsDeliveryUnavailableText,
-  sharedFullWidth,
-  addOnContainer,
-  formSectionContainer,
-  planOptionDescription,
-  formButton,
-} from "./signupStyles";
 
-// import { secondaryColor } from "../../../styles/jss/nextjs-material-kit-pro";
-// import signupPageStyle from "../../../styles/jss/nextjs-material-kit-pro/pages/signupPageStyle";
+import { secondaryColor } from "../../../styles/jss/nextjs-material-kit-pro.js";
 
 type AddonPriceData = {
   business_account_type_id: number;
@@ -43,6 +30,7 @@ type AddonsFormState = {
 };
 
 type AddonsPageProps = {
+  classes: Record<string, string>;
   formState: AddonsFormState;
   isVisible: boolean;
   inTransition?: boolean;
@@ -50,7 +38,6 @@ type AddonsPageProps = {
   changePage: (page: number) => void;
 };
 
-//const useStyles = makeStyles(signupPageStyle as any);
 const MotionDiv = motion.div as any;
 
 const containerVariants = {
@@ -70,7 +57,7 @@ const childVariants = {
 };
 
 export default function AddonsPage(props: AddonsPageProps) {
-  // const classes = useStyles();
+  const classes = props.classes;
   const getConsultantTitle = (): string | null => {
     switch (props.formState.businessAccountTypeId) {
       case 1:
@@ -156,19 +143,20 @@ export default function AddonsPage(props: AddonsPageProps) {
     <AnimatePresence>
       {props.isVisible && (
         <MotionDiv
-          style={formSectionContainer}
+          className={classes.formSectionContainer}
           variants={containerVariants}
           initial="hidden"
           animate="show"
           exit={{ opacity: 0, y: 30, transition: { duration: 0.2 } }}
         >
           <MotionDiv
-            style={addOnContainer}
-            //className={classes.addonContainer}
+            className={classes.addonContainer}
             variants={childVariants}
           >
-            <div>
-              <span>{getConsultantTitle()} Consultant</span>
+            <div className={classes.addonBody}>
+              <span className={classes.addonTitle}>
+                {getConsultantTitle()} Consultant
+              </span>
               <span>
                 Included <Checkbox disabled checked />
               </span>
@@ -182,8 +170,11 @@ export default function AddonsPage(props: AddonsPageProps) {
           </MotionDiv>
           {props.formState.businessAccountTypeId !== null &&
             [1, 3].includes(props.formState.businessAccountTypeId) && (
-              <MotionDiv style={addOnContainer} variants={childVariants}>
-                <div>
+              <MotionDiv
+                className={classes.addonContainer}
+                variants={childVariants}
+              >
+                <div className={classes.addonBody}>
                   <span>App Design</span>
                   <span>
                     Included <Checkbox disabled checked />
@@ -195,9 +186,12 @@ export default function AddonsPage(props: AddonsPageProps) {
                 </p>
               </MotionDiv>
             )}
-          <MotionDiv style={addOnContainer} variants={childVariants}>
-            <div>
-              <span>Data Onboarding</span>
+          <MotionDiv
+            className={classes.addonContainer}
+            variants={childVariants}
+          >
+            <div className={classes.addonBody}>
+              <span className={classes.addonTitle}>Data Onboarding</span>
               <span>
                 {getAddonPrice(1)}
                 <Checkbox
@@ -210,8 +204,8 @@ export default function AddonsPage(props: AddonsPageProps) {
             </div>
             {!isAddonEnabled(1) && (
               <p
-                //className={classes.planOptionDescription}
-                style={addonsUnavailableText}
+                className={classes.planOptionDescription}
+                style={{ color: secondaryColor[0], fontWeight: "500" }}
               >
                 Currently unavailable due to high demand
               </p>
@@ -223,24 +217,37 @@ export default function AddonsPage(props: AddonsPageProps) {
           </MotionDiv>
           {props.formState.businessAccountTypeId !== null &&
             [1, 3].includes(props.formState.businessAccountTypeId) && (
-              <MotionDiv style={addOnContainer} variants={childVariants}>
-                <div>App Setup</div>
+              <MotionDiv
+                className={classes.addonContainer}
+                variants={childVariants}
+              >
+                <div className={classes.addonTitle}>App Setup</div>
                 <p>
                   In a rush to get your app live on the App Stores? With Express
                   App Setup, we'll put your app in our priority queue for
                   deployment.
                 </p>
-                <div>
-                  <span style={{ fontWeight: "500" }}>Standard</span>
+                <div className={classes.addonBody}>
+                  <span
+                    className={classes.addonTitle}
+                    style={{ fontWeight: "500" }}
+                  >
+                    Standard
+                  </span>
                   <span>
                     Included <Checkbox color="secondary" checked disabled />
                   </span>
                 </div>
-                <p style={addonsDeliveryEstimateText}>
+                <p className={classes.addonsDeliveryEstimateText}>
                   Est. {getDeliveryMetadata("standard")}
                 </p>
-                <div>
-                  <span style={{ fontWeight: "500" }}>Express</span>
+                <div className={classes.addonBody}>
+                  <span
+                    className={classes.addonTitle}
+                    style={{ fontWeight: "500" }}
+                  >
+                    Express
+                  </span>
                   <span>
                     {getAddonPrice(2)}
                     <Checkbox
@@ -253,15 +260,18 @@ export default function AddonsPage(props: AddonsPageProps) {
                     />
                   </span>
                 </div>
-                <p style={addonsDeliveryEstimateText}>
+                <p className={classes.addonsDeliveryEstimateText}>
                   Est. {getDeliveryMetadata("express")}
                 </p>
                 {!isAddonEnabled(2) && (
                   <p
-                    //className={classes.planOptionDescription}
+                    className={classes.planOptionDescription}
                     style={{
-                      ...planOptionDescription,
-                      ...addonsDeliveryUnavailableText,
+                      color: secondaryColor[0],
+                      fontWeight: "500",
+                      marginBottom: 0,
+                      marginTop: "-0.8em",
+                      fontSize: "0.8em",
                     }}
                   >
                     Currently unavailable due to high demand
@@ -269,13 +279,15 @@ export default function AddonsPage(props: AddonsPageProps) {
                 )}
               </MotionDiv>
             )}
-          <MotionDiv variants={childVariants} style={sharedFullWidth}>
+          <MotionDiv
+            variants={childVariants}
+            className={classes.sharedFullWidth}
+          >
             <Button
               variant="contained"
               size="large"
               fullWidth
-              //className={classes.formButton}
-              style={formButton}
+              className={classes.formButton}
               onClick={() => props.changePage(3)}
             >
               Next

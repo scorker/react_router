@@ -184,6 +184,7 @@ const signupPageStyle = {
     color: primaryColor[2],
   },
   addonContainer: {
+    color: primaryColor[0],
     backgroundColor: whiteColor,
     width: "100%",
     padding: "1em",
