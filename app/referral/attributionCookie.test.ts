@@ -3,6 +3,7 @@ import {
   captureReferralAttributionFromSearch,
   getPromoCodeFromSearch,
   getReferralAttribution,
+  refreshReferralAttributionWindow,
   getStoredReferralPromoCode,
 } from "./attributionCookie";
 
@@ -46,5 +47,14 @@ describe("attributionCookie", () => {
 
     expect(getReferralAttribution()).toBeNull();
     expect(getStoredReferralPromoCode()).toBeNull();
+  });
+
+  it("refreshes the attribution window when attribution already exists", () => {
+    captureReferralAttributionFromSearch("?promo=ROLLING60", "/referral");
+
+    const refreshedAttribution = refreshReferralAttributionWindow();
+
+    expect(refreshedAttribution?.promoCode).toBe("ROLLING60");
+    expect(getStoredReferralPromoCode()).toBe("ROLLING60");
   });
 });

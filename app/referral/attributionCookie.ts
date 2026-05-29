@@ -1,5 +1,5 @@
 const REFERRAL_ATTRIBUTION_COOKIE = "styler_referral_attribution";
-const REFERRAL_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 90;
+const REFERRAL_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 60;
 
 type ReferralAttribution = {
   promoCode: string;
@@ -113,3 +113,19 @@ export const getReferralAttribution = (): ReferralAttribution | null => {
 export const getStoredReferralPromoCode = (): string | null => {
   return getReferralAttribution()?.promoCode ?? null;
 };
+
+export const refreshReferralAttributionWindow =
+  (): ReferralAttribution | null => {
+    const attribution = getReferralAttribution();
+
+    if (!attribution) {
+      return null;
+    }
+
+    setCookieValue(
+      REFERRAL_ATTRIBUTION_COOKIE,
+      encodeURIComponent(JSON.stringify(attribution)),
+    );
+
+    return attribution;
+  };

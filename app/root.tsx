@@ -13,7 +13,10 @@ import "./app.css";
 import { CacheProvider } from "@emotion/react";
 import createEmotionCache from "./createCache";
 import AppTheme from "./theme";
-import { captureReferralAttributionFromSearch } from "./referral/attributionCookie";
+import {
+  captureReferralAttributionFromSearch,
+  refreshReferralAttributionWindow,
+} from "./referral/attributionCookie";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -68,10 +71,14 @@ function ReferralAttributionTracker() {
   const location = useLocation();
 
   useEffect(() => {
-    captureReferralAttributionFromSearch(
+    const capturedAttribution = captureReferralAttributionFromSearch(
       location.search,
       `${location.pathname}${location.search}`,
     );
+
+    if (!capturedAttribution) {
+      refreshReferralAttributionWindow();
+    }
   }, [location.pathname, location.search]);
 
   return null;
