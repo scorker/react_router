@@ -73,6 +73,35 @@ interface PaymentPageProps {
   removeAddon: (id: number) => void;
 }
 
+const resolveRenderableComponent = (
+  loadedModule: unknown,
+): React.ComponentType<any> | null => {
+  const moduleValue = loadedModule as {
+    default?: unknown;
+  };
+  const nestedDefault =
+    moduleValue?.default && typeof moduleValue.default === "object"
+      ? (moduleValue.default as { default?: unknown }).default
+      : undefined;
+
+  const candidates = [nestedDefault, moduleValue?.default, loadedModule];
+
+  for (const candidate of candidates) {
+    if (typeof candidate === "function") {
+      return candidate as React.ComponentType<any>;
+    }
+    if (
+      typeof candidate === "object" &&
+      candidate !== null &&
+      "$$typeof" in candidate
+    ) {
+      return candidate as React.ComponentType<any>;
+    }
+  }
+
+  return null;
+};
+
 export default function PaymentPage(props: PaymentPageProps) {
   const classes = props.classes;
 
@@ -84,8 +113,8 @@ export default function PaymentPage(props: PaymentPageProps) {
   const [createAccountError, setCreateAccountError] = useState<string | null>(
     null,
   );
-  // const [AnimatedNumbersComponent, setAnimatedNumbersComponent] =
-  //   useState<React.ComponentType<any> | null>(null);
+  const [AnimatedNumbersComponent, setAnimatedNumbersComponent] =
+    useState<React.ComponentType<any> | null>(null);
   const [LottieComponent, setLottieComponent] =
     useState<React.ComponentType<any> | null>(null);
   const stripe = useStripe();
@@ -116,9 +145,8 @@ export default function PaymentPage(props: PaymentPageProps) {
     import("react-animated-numbers")
       .then((module) => {
         if (isMounted) {
-          // setAnimatedNumbersComponent(
-          //   () => module.default as React.ComponentType<any>,
-          // );
+          const component = resolveRenderableComponent(module);
+          setAnimatedNumbersComponent(() => component);
         }
       })
       .catch(() => {
@@ -128,7 +156,8 @@ export default function PaymentPage(props: PaymentPageProps) {
     import("react-lottie")
       .then((module) => {
         if (isMounted) {
-          setLottieComponent(() => module.default as React.ComponentType<any>);
+          const component = resolveRenderableComponent(module);
+          setLottieComponent(() => component);
         }
       })
       .catch(() => {
@@ -447,18 +476,18 @@ export default function PaymentPage(props: PaymentPageProps) {
           <span className={classes.planSummaryLabel}>Total</span>
           <div className={classes.sharedFlexRow}>
             <span>£</span>
-            {/* {AnimatedNumbersComponent ? (
-                <AnimatedNumbersComponent
-                  includeComma
-                  animateToNumber={Math.round(totalAmount * 100) / 100}
-                />
-              ) : ( */}
-            <span className={classes.paymentSummaryAmountFallback}>
-              {Number.isInteger(totalAmount)
-                ? Number(totalAmount)
-                : Number(totalAmount).toFixed(2)}
-            </span>
-            {/* )} */}
+            {AnimatedNumbersComponent ? (
+              <AnimatedNumbersComponent
+                includeComma
+                animateToNumber={Math.round(totalAmount * 100) / 100}
+              />
+            ) : (
+              <span className={classes.paymentSummaryAmountFallback}>
+                {Number.isInteger(totalAmount)
+                  ? Number(totalAmount)
+                  : Number(totalAmount).toFixed(2)}
+              </span>
+            )}
           </div>
         </div>
       </div>

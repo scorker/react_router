@@ -2,9 +2,10 @@ import { withStyles } from "@mui/styles";
 import { Button } from "@mui/material";
 import stylerLogoSecondary from "../assets/styler_logo_secondary.svg";
 import signupPageStyle from "../../styles/jss/nextjs-material-kit-pro/pages/signupPageStyle.js";
-import { useState } from "react";
-import { Link, useLocation } from "react-router";
+import { useEffect, useState } from "react";
+import { useLocation, Link } from "react-router";
 import { getPromoCodeFromSearch } from "./attributionCookie";
+import Api from "../../api/index";
 
 const ReferralPage = (props: any) => {
   const { search } = useLocation();
@@ -14,6 +15,19 @@ const ReferralPage = (props: any) => {
   const signupLink = business_promo_code
     ? `/?promo=${encodeURIComponent(business_promo_code)}`
     : "/";
+
+  useEffect(() => {
+    const fetchPromotion = async () => {
+      if (!business_promo_code) {
+        return;
+      }
+      const { data } = await Api.getPromotion(business_promo_code);
+      console.log("Promotion data:", data);
+      setUserName(data.advocate_name);
+      setBusinessName(data.business_name);
+    };
+    fetchPromotion();
+  }, [business_promo_code]);
 
   return (
     <div className={props.classes.pageContainer}>
