@@ -6,6 +6,7 @@ import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 // API
 import Api from "../../../api/index";
+import { getStoredReferralPromoCode } from "../../referral/attributionCookie";
 
 import {
   IconButton,
@@ -90,6 +91,25 @@ export default function PaymentPage(props: PaymentPageProps) {
   const stripe = useStripe();
   const elements = useElements();
 
+  const applyPromoCode = async (codeToApply?: string | null) => {
+    const selectedPromoCode = codeToApply?.trim() || promoCode?.trim();
+
+    if (!selectedPromoCode) {
+      return;
+    }
+
+    try {
+      setPromoLoading(true);
+      const { data } = await Api.getPromotion(selectedPromoCode);
+      setPromoCode(selectedPromoCode);
+      setPromoData(data);
+    } catch (e) {
+      setPromoData({ valid: false, message: "Invalid promo code" });
+    } finally {
+      setPromoLoading(false);
+    }
+  };
+
   useEffect(() => {
     let isMounted = true;
 
@@ -118,6 +138,16 @@ export default function PaymentPage(props: PaymentPageProps) {
     return () => {
       isMounted = false;
     };
+  }, []);
+
+  useEffect(() => {
+    const storedPromoCode = getStoredReferralPromoCode();
+
+    if (!storedPromoCode) {
+      return;
+    }
+
+    void applyPromoCode(storedPromoCode);
   }, []);
 
   const CARD_ELEMENT_OPTIONS = {
@@ -339,21 +369,6 @@ export default function PaymentPage(props: PaymentPageProps) {
         </div>
       </div>
     );
-  };
-
-  const applyPromoCode = async () => {
-    if (!promoCode) {
-      return;
-    }
-    try {
-      setPromoLoading(true);
-      let { data } = await Api.getPromotion(promoCode);
-      setPromoData(data);
-    } catch (e) {
-      setPromoData({ valid: false, message: "Invalid promo code" });
-    } finally {
-      setPromoLoading(false);
-    }
   };
 
   const clearPromoCode = () => {

@@ -15,6 +15,7 @@ import stylerLogoSecondary from "../assets/styler_logo_secondary.svg";
 import PresentationSlide from "../../components/SignUp/PresentationSlide";
 import SuccessOverlay from "../../components/SignUp/SuccessOverlay";
 import signupPageStyle from "../../styles/jss/nextjs-material-kit-pro/pages/signupPageStyle.js";
+import { getStoredReferralPromoCode } from "../referral/attributionCookie";
 
 const backButtonSx = {
   color: "inherit",
@@ -47,6 +48,9 @@ const SignUp = (props: any) => {
   >([]);
   const [createAccountLoading, setCreateAccountLoading] = useState(false);
   const [formComplete, setFormComplete] = useState(false);
+  const [referredPromoCode, setReferredPromoCode] = useState<string | null>(
+    null,
+  );
 
   const formState = {
     stripePromise,
@@ -70,6 +74,7 @@ const SignUp = (props: any) => {
     setFormPage(0);
     // Init intercom
     Intercom({ app_id: "u8n0vv7y" });
+    setReferredPromoCode(getStoredReferralPromoCode());
   }, []);
 
   const changePageViaProgressBar = (page: number) => {
@@ -348,6 +353,11 @@ const SignUp = (props: any) => {
           <div className={props.classes.formTitle}>
             {renderBackButton()}
             {renderSubTitle()}
+            {referredPromoCode ? (
+              <div className={props.classes.referralAttributionBadge}>
+                Referred offer: {referredPromoCode}
+              </div>
+            ) : null}
           </div>
           <div className={props.classes.formProgressBarContainer}>
             <div

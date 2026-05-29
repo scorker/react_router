@@ -6,11 +6,14 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
+import { useEffect } from "react";
+import { useLocation } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
 import { CacheProvider } from "@emotion/react";
 import createEmotionCache from "./createCache";
 import AppTheme from "./theme";
+import { captureReferralAttributionFromSearch } from "./referral/attributionCookie";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -42,8 +45,6 @@ export const links: Route.LinksFunction = () => [
 // });
 
 export function Layout({ children }: { children: React.ReactNode }) {
- 
-
   return (
     <html lang="en">
       <head>
@@ -53,9 +54,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <div id="root">
-          {children}
-        </div>
+        <div id="root">{children}</div>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -65,21 +64,36 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 const cache = createEmotionCache();
 
+function ReferralAttributionTracker() {
+  const location = useLocation();
+
+  useEffect(() => {
+    captureReferralAttributionFromSearch(
+      location.search,
+      `${location.pathname}${location.search}`,
+    );
+  }, [location.pathname, location.search]);
+
+  return null;
+}
+
 export default function App() {
-   if (typeof window !== "undefined") {
-     return (
-       <CacheProvider value={cache}>
-         <AppTheme>
-           <Outlet />
-         </AppTheme>
-       </CacheProvider>
-     );
-   }
-   return (
-     <AppTheme>
-       <Outlet />
-     </AppTheme>
-   );
+  if (typeof window !== "undefined") {
+    return (
+      <CacheProvider value={cache}>
+        <AppTheme>
+          <ReferralAttributionTracker />
+          <Outlet />
+        </AppTheme>
+      </CacheProvider>
+    );
+  }
+  return (
+    <AppTheme>
+      <ReferralAttributionTracker />
+      <Outlet />
+    </AppTheme>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

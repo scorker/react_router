@@ -85,6 +85,18 @@ const signupPageStyle = {
       marginBottom: "0.85rem",
     },
   },
+  referralAttributionBadge: {
+    marginTop: "0.55rem",
+    display: "inline-block",
+    padding: "0.3rem 0.7rem",
+    borderRadius: "999px",
+    fontSize: "0.78rem",
+    fontWeight: "600",
+    letterSpacing: "0.02em",
+    color: primaryColor[0],
+    backgroundColor: "rgba(" + hexToRgb(secondaryColor[0]) + ", 0.15)",
+    border: "1px solid rgba(" + hexToRgb(secondaryColor[0]) + ", 0.35)",
+  },
   formProgressBarContainer: {
     display: "flex",
     flex: 1,
