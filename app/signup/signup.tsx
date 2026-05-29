@@ -24,6 +24,9 @@ const backButtonSx = {
 const backButton: React.CSSProperties = {
   position: "absolute",
   marginTop: "-2px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
 };
 
 const SignUp = (props: any) => {
