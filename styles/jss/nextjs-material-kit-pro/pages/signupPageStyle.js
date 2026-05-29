@@ -23,6 +23,11 @@ const signupPageStyle = {
       overflow: "auto",
     },
   },
+
+  sharedFlexRow: {
+    display: "flex",
+  },
+
   formContainer: {
     flex: "1 1 0%",
     height: "100%",

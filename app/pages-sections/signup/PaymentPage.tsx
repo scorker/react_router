@@ -86,8 +86,8 @@ export default function PaymentPage(props: PaymentPageProps) {
   );
   // const [AnimatedNumbersComponent, setAnimatedNumbersComponent] =
   //   useState<React.ComponentType<any> | null>(null);
-  // const [LottieComponent, setLottieComponent] =
-  //   useState<React.ComponentType<any> | null>(null);
+  const [LottieComponent, setLottieComponent] =
+    useState<React.ComponentType<any> | null>(null);
   const stripe = useStripe();
   const elements = useElements();
 
@@ -127,9 +127,9 @@ export default function PaymentPage(props: PaymentPageProps) {
 
     import("react-lottie")
       .then((module) => {
-        // if (isMounted) {
-        //   setLottieComponent(() => module.default as React.ComponentType<any>);
-        // }
+        if (isMounted) {
+          setLottieComponent(() => module.default as React.ComponentType<any>);
+        }
       })
       .catch(() => {
         // Keep animation hidden if import fails.
@@ -466,9 +466,9 @@ export default function PaymentPage(props: PaymentPageProps) {
   };
 
   const renderPromoLottie = () => {
-    // if (!LottieComponent) {
-    //   return null;
-    // }
+    if (!LottieComponent) {
+      return null;
+    }
     const defaultOptions = {
       loop: false,
       autoplay: true,
@@ -479,7 +479,7 @@ export default function PaymentPage(props: PaymentPageProps) {
     };
     return (
       <div className={classes.paymentPromoLottieWrapper}>
-        {/* <LottieComponent options={defaultOptions} width={50} /> */}
+        <LottieComponent options={defaultOptions} width={50} />
       </div>
     );
   };
