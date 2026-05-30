@@ -90,6 +90,11 @@ const signupPageStyle = {
       marginBottom: "0.85rem",
     },
   },
+  formSubtitle: {
+    color: primaryColor[2],
+    fontWeight: "400",
+    fontSize: "clamp(0.95rem, 3.5vw, 1.05rem)",
+  },
   referralAttributionBadge: {
     marginTop: "0.55rem",
     display: "inline-block",
@@ -372,12 +377,21 @@ const signupPageStyle = {
     borderRadius: "0.75rem",
     backgroundColor: "rgba(" + hexToRgb(primaryColor[0]) + ", 0.05)",
   },
+  formCTA: {
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    padding: "0.9rem 1rem",
+  },
   formText: {
     color: primaryColor[0],
     fontWeight: "500",
     marginBottom: "0",
     fontSize: "clamp(0.95rem, 3.5vw, 1.05rem)",
     lineHeight: "1.45",
+  },
+  valuePropItem: {
+    color: primaryColor[0],
   },
 };
 

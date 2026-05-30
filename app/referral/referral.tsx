@@ -11,6 +11,7 @@ const ReferralPage = (props: any) => {
   const { search } = useLocation();
   const [user_name, setUserName] = useState("Scott Corker");
   const [business_name, setBusinessName] = useState("MyWareDesign");
+  const [promotionData, setPromotionData] = useState<any>(null);
   const business_promo_code = getPromoCodeFromSearch(search);
   const signupLink = business_promo_code
     ? `/?promo=${encodeURIComponent(business_promo_code)}`
@@ -22,7 +23,7 @@ const ReferralPage = (props: any) => {
         return;
       }
       const { data } = await Api.getPromotion(business_promo_code);
-      console.log("Promotion data:", data);
+      setPromotionData(data);
       setUserName(data.advocate_name);
       setBusinessName(data.business_name);
     };
@@ -57,10 +58,20 @@ const ReferralPage = (props: any) => {
             <p className={props.classes.formText}>advocate context</p>
           </div>
           <div className={props.classes.formGroup}>
-            <p className={props.classes.formText}>product value props</p>
+            <p className={props.classes.formSubtitle}>Products</p>
+            {promotionData && promotionData.appliesTo.length > 0 ? (
+              <ul className={props.classes.valuePropList}>
+                {promotionData.appliesTo.map(
+                  (feature: string, index: number) => (
+                    <li key={index} className={props.classes.valuePropItem}>
+                      {feature}
+                    </li>
+                  ),
+                )}
+              </ul>
+            ) : null}
           </div>
-          <div className={props.classes.formGroup}>
-            <p className={props.classes.formText}>signup CTA</p>
+          <div className={props.classes.formCTA}>
             <Button
               component={Link}
               to={signupLink}
