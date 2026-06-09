@@ -45,7 +45,20 @@ const signupPageStyle = {
   formHeader: {
     display: "flex",
     flexDirection: "row",
+    marginBottom: "1rem",
     width: "100%",
+    padding: "0.9rem 1rem",
+    borderRadius: "0.75rem",
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    border: "1px solid rgba(" + hexToRgb(blackColor) + ", 0.08)",
+    boxShadow: "0 10px 24px rgba(" + hexToRgb(blackColor) + ", 0.12)",
+    backdropFilter: "blur(6px)",
+    WebkitBackdropFilter: "blur(6px)",
+    color: primaryColor[0],
+    "& $formText, & $formSubtitle, & $valuePropItem": {
+      color: primaryColor[0],
+      textShadow: "0 1px 0 rgba(255, 255, 255, 0.35)",
+    },
   },
   formBody: {
     ...containerFluid,
@@ -375,7 +388,16 @@ const signupPageStyle = {
     width: "100%",
     padding: "0.9rem 1rem",
     borderRadius: "0.75rem",
-    backgroundColor: "rgba(" + hexToRgb(primaryColor[0]) + ", 0.05)",
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    border: "1px solid rgba(" + hexToRgb(blackColor) + ", 0.08)",
+    boxShadow: "0 10px 24px rgba(" + hexToRgb(blackColor) + ", 0.12)",
+    backdropFilter: "blur(6px)",
+    WebkitBackdropFilter: "blur(6px)",
+    color: primaryColor[0],
+    "& $formText, & $formSubtitle, & $valuePropItem": {
+      color: primaryColor[0],
+      textShadow: "0 1px 0 rgba(255, 255, 255, 0.35)",
+    },
   },
   formCTA: {
     display: "flex",

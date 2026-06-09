@@ -9,10 +9,15 @@ import Api from "../../api/index";
 
 const ReferralPage = (props: any) => {
   const { search } = useLocation();
-  const [user_name, setUserName] = useState("Scott Corker");
+  const [user_firstname, setUserFirstName] = useState("Scott");
+  const [user_lastname, setUserLastName] = useState("Corker");
   const [business_name, setBusinessName] = useState("MyWareDesign");
   const [promotionData, setPromotionData] = useState<any>(null);
+  const [businessImg, setBusinessImg] = useState<any>(null);
   const business_promo_code = getPromoCodeFromSearch(search);
+  const businessBackgroundImage = businessImg
+    ? `https://cdn.whatstyle.com/${businessImg.trim()}`
+    : null;
   const signupLink = business_promo_code
     ? `/?promo=${encodeURIComponent(business_promo_code)}`
     : "/";
@@ -22,16 +27,30 @@ const ReferralPage = (props: any) => {
       if (!business_promo_code) {
         return;
       }
-      const { data } = await Api.getPromotion(business_promo_code);
+      const { data } = await Api.getPromotionDetails(business_promo_code);
       setPromotionData(data);
-      setUserName(data.advocate_name);
+      setUserFirstName(data.advocate_firstname);
+      setUserLastName(data.advocate_lastname);
       setBusinessName(data.business_name);
+      setBusinessImg(data.business_img);
     };
     fetchPromotion();
   }, [business_promo_code]);
 
   return (
-    <div className={props.classes.pageContainer}>
+    <div
+      className={props.classes.pageContainer}
+      style={
+        businessBackgroundImage
+          ? {
+              backgroundImage: `url(${businessBackgroundImage})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }
+          : undefined
+      }
+    >
       <div className={props.classes.formContainer}>
         <div className={props.classes.logoContainer}>
           <img
@@ -42,12 +61,12 @@ const ReferralPage = (props: any) => {
         </div>
         <div className={props.classes.formHeader}>
           <h2 className={props.classes.formTitle}>
-            {`${user_name} from ${business_name} uses Styler. Try it with 50% off
+            {`${user_firstname} ${user_lastname} from ${business_name} uses Styler. Try it with 50% off
             for 3 months.`}
           </h2>
         </div>
         {business_promo_code ? (
-          <div style={{ marginBottom: "1rem", textAlign: "center" }}>
+          <div className={props.classes.formGroup}>
             <p className={props.classes.formText}>
               Referral offer code: {business_promo_code}
             </p>

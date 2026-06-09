@@ -25,6 +25,9 @@ const remoteApi = {
   getPromotion(promoCode: string) {
     return axios.get(`${baseUrl}/website/promo_code/${promoCode}`);
   },
+  getPromotionDetails(promoCode: string) {
+    return axios.get(`${baseUrl}/website/promo_code_details/${promoCode}`);
+  },
   postUserDetails(data: unknown) {
     return axios.post(`${baseUrl}/website/user_details`, data);
   },
