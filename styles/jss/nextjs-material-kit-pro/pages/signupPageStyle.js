@@ -198,6 +198,41 @@ const signupPageStyle = {
     position: "absolute",
     marginTop: -2,
   },
+  signUpButton: {
+    marginBottom: "1.5em",
+    width: "100%",
+    minHeight: "3.15rem",
+    borderRadius: "0.85rem",
+    padding: "0.7rem 1.2rem",
+    background:
+      "linear-gradient(135deg, " +
+      primaryColor[0] +
+      " 0%, " +
+      secondaryColor[0] +
+      " 100%)",
+    color: whiteColor,
+    fontWeight: "700",
+    fontSize: "0.95rem",
+    letterSpacing: "0.015em",
+    textTransform: "none",
+    boxShadow: "0 12px 22px rgba(" + hexToRgb(primaryColor[0]) + ", 0.28)",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease",
+    "&:hover": {
+      boxShadow: "0 16px 28px rgba(" + hexToRgb(primaryColor[0]) + ", 0.34)",
+      transform: "translateY(-1px)",
+      filter: "brightness(1.02)",
+    },
+    "&:active": {
+      transform: "translateY(0)",
+      boxShadow: "0 8px 16px rgba(" + hexToRgb(primaryColor[0]) + ", 0.26)",
+    },
+    "&:disabled": {
+      background: "rgba(" + hexToRgb(grayColor[2]) + ", 0.45)",
+      color: "rgba(" + hexToRgb(whiteColor) + ", 0.75)",
+      boxShadow: "none",
+      transform: "none",
+    },
+  },
   planOptionContainer: {
     display: "flex",
     flexDirection: "column",
@@ -385,7 +420,7 @@ const signupPageStyle = {
     display: "flex",
     flexDirection: "column",
     marginBottom: "1rem",
-    width: "100%",
+    //width: "100%",
     padding: "0.9rem 1rem",
     borderRadius: "0.75rem",
     backgroundColor: "rgba(255, 255, 255, 0.9)",
@@ -399,6 +434,9 @@ const signupPageStyle = {
       textShadow: "0 1px 0 rgba(255, 255, 255, 0.35)",
     },
   },
+  formTextPara: {
+    marginBottom: "1rem",
+  },
   formCTA: {
     display: "flex",
     flexDirection: "column",
@@ -408,7 +446,7 @@ const signupPageStyle = {
   formText: {
     color: primaryColor[0],
     fontWeight: "500",
-    marginBottom: "0",
+    //marginBottom: "0",
     fontSize: "clamp(0.95rem, 3.5vw, 1.05rem)",
     lineHeight: "1.45",
   },

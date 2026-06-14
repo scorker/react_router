@@ -9,15 +9,8 @@ import Api from "../../api/index";
 
 const ReferralPage = (props: any) => {
   const { search } = useLocation();
-  const [user_firstname, setUserFirstName] = useState("Scott");
-  const [user_lastname, setUserLastName] = useState("Corker");
-  const [business_name, setBusinessName] = useState("MyWareDesign");
   const [promotionData, setPromotionData] = useState<any>(null);
-  const [businessImg, setBusinessImg] = useState<any>(null);
   const business_promo_code = getPromoCodeFromSearch(search);
-  const businessBackgroundImage = businessImg
-    ? `https://cdn.whatstyle.com/${businessImg.trim()}`
-    : null;
   const signupLink = business_promo_code
     ? `/?promo=${encodeURIComponent(business_promo_code)}`
     : "/";
@@ -29,10 +22,6 @@ const ReferralPage = (props: any) => {
       }
       const { data } = await Api.getPromotionDetails(business_promo_code);
       setPromotionData(data);
-      setUserFirstName(data.advocate_firstname);
-      setUserLastName(data.advocate_lastname);
-      setBusinessName(data.business_name);
-      setBusinessImg(data.business_img);
     };
     fetchPromotion();
   }, [business_promo_code]);
@@ -41,9 +30,9 @@ const ReferralPage = (props: any) => {
     <div
       className={props.classes.pageContainer}
       style={
-        businessBackgroundImage
+        promotionData && promotionData.business_img
           ? {
-              backgroundImage: `url(${businessBackgroundImage})`,
+              backgroundImage: `url(https://cdn.whatstyle.com/${promotionData.business_img.trim()})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -61,23 +50,44 @@ const ReferralPage = (props: any) => {
         </div>
         <div className={props.classes.formHeader}>
           <h2 className={props.classes.formTitle}>
-            {`${user_firstname} ${user_lastname} from ${business_name} uses Styler. Try it with 50% off
+            {promotionData &&
+              `${promotionData.business_user_firstname} ${promotionData.business_user_lastname} from ${promotionData.business_name} uses Styler. Try it with 50% off
             for 3 months.`}
           </h2>
         </div>
-        {business_promo_code ? (
-          <div className={props.classes.formGroup}>
-            <p className={props.classes.formText}>
-              Referral offer code: {business_promo_code}
-            </p>
-          </div>
-        ) : null}
+
         <div className={props.classes.formBody}>
           <div className={props.classes.formGroup}>
-            <p className={props.classes.formText}>advocate context</p>
+            <p
+              className={`${props.classes.formText} ${props.classes.formTextPara}`}
+            >
+              {promotionData &&
+                promotionData.business_slug &&
+                `Hi from ${promotionData.business_slug}, we are pleased your are interested in trying Styler.`}
+            </p>
+            <p
+              className={`${props.classes.formText} ${props.classes.formTextPara}`}
+            >
+              {promotionData &&
+                promotionData.description &&
+                promotionData.description}
+            </p>
+            <p
+              className={`${props.classes.formText} ${props.classes.formTextPara}`}
+            >
+              {promotionData &&
+                `We are located at ${promotionData.address_unit_name ? promotionData.address_unit_name : ""}, 
+                ${promotionData.address_street ? promotionData.address_street : ""}, 
+                ${promotionData.address_city ? promotionData.address_city : ""}, 
+                ${promotionData.address_state ? promotionData.address_state : ""} 
+                ${promotionData.address_zipcode ? promotionData.address_zipcode : ""}`}
+            </p>
           </div>
           <div className={props.classes.formGroup}>
-            <p className={props.classes.formSubtitle}>Products</p>
+            <p className={props.classes.formSubtitle}>
+              {`We are offering you a special promotion with code ${business_promo_code} to get started.  The products on promotion are
+              the following:`}
+            </p>
             {promotionData && promotionData.appliesTo.length > 0 ? (
               <ul className={props.classes.valuePropList}>
                 {promotionData.appliesTo.map(
@@ -96,7 +106,7 @@ const ReferralPage = (props: any) => {
               to={signupLink}
               variant="contained"
               color="secondary"
-              className={props.classes.formButton}
+              className={props.classes.signUpButton}
             >
               Start your signup
             </Button>
